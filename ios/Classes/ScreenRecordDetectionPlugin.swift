@@ -4,40 +4,60 @@ import UIKit
 public class ScreenRecordDetectionPlugin: NSObject, FlutterPlugin {
 
     class ScreenManager {
-        private var blurView: UIVisualEffectView?
+        private var shieldWindow: UIWindow?
 
         func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
             if call.method == "makeSecured" {
                 let enable = (call.arguments as? [String: Any])?["enable"] as? Bool ?? false
-
-                if enable {
-                    addBlur()
-                } else {
-                    removeBlur()
-                }
-
+                enable ? enableShield() : disableShield()
                 result(nil)
             } else {
                 result(FlutterMethodNotImplemented)
             }
         }
 
-        private func addBlur() {
-            guard blurView == nil else { return }
-            guard let window = UIApplication.shared.windows.first else { return }
+        private func enableShield() {
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(showShield),
+                name: UIApplication.userDidTakeScreenshotNotification,
+                object: nil
+            )
 
-            let blur = UIBlurEffect(style: .light)
-            let view = UIVisualEffectView(effect: blur)
-            view.frame = window.bounds
-            view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(showShield),
+                name: UIScreen.capturedDidChangeNotification,
+                object: nil
+            )
 
-            window.addSubview(view)
-            blurView = view
+            if UIScreen.main.isCaptured {
+                showShield()
+            }
         }
 
-        private func removeBlur() {
-            blurView?.removeFromSuperview()
-            blurView = nil
+        private func disableShield() {
+            NotificationCenter.default.removeObserver(self)
+            hideShield()
+        }
+
+        @objc private func showShield() {
+            if shieldWindow != nil { return }
+
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+
+            let w = UIWindow(windowScene: windowScene)
+            w.frame = UIScreen.main.bounds
+            w.windowLevel = UIWindow.Level.alert + 2
+            w.backgroundColor = .black
+            w.isHidden = false
+
+            shieldWindow = w
+        }
+
+        private func hideShield() {
+            shieldWindow?.isHidden = true
+            shieldWindow = nil
         }
     }
 
