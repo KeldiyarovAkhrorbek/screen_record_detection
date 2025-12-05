@@ -1,7 +1,9 @@
 name: screen_record_detection
 description: "Flutter plugin for detecting screen recording"
 version: 0.0.1
-homepage:
+homepage: https://github.com/KeldiyarovAkhrorbek/screen_record_detection
+repository: https://github.com/KeldiyarovAkhrorbek/screen_record_detection
+issue_tracker: https://github.com/KeldiyarovAkhrorbek/screen_record_detection/issues
 
 environment:
   sdk: ^3.9.2
