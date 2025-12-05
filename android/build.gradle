@@ -1,4 +1,4 @@
-group = "com.recording.detection.screen_record_detection"
+group = "com.recording.detection"
 version = "1.0-SNAPSHOT"
 
 buildscript {
@@ -57,9 +57,9 @@ android {
             useJUnitPlatform()
 
             testLogging {
-               events "passed", "skipped", "failed", "standardOut", "standardError"
-               outputs.upToDateWhen {false}
-               showStandardStreams = true
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen { false }
+                showStandardStreams = true
             }
         }
     }

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.recording.detection.screen_record_detection">
+    package="com.recording.detection">
 
     <uses-permission android:name="android.permission.DETECT_SCREEN_RECORDING" />
 
