@@ -1,50 +1,61 @@
+package com.recording.detection
+
+import android.app.Activity
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodChannel
 
 class ScreenRecordDetectionPlugin : FlutterPlugin, ActivityAware {
 
     private var eventChannel: EventChannel? = null
     private var streamHandler: ScreenRecordStreamHandler? = null
-    private var binding: FlutterPlugin.FlutterPluginBinding? = null
+    private var methodChannel: MethodChannel? = null
+    private var secureFlagManager: SecureFlagManager? = null
+    private lateinit var flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 
-    // --- FlutterPlugin Implementation ---
-    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        this.binding = flutterPluginBinding
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        this.flutterPluginBinding = binding
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        this.binding = null
     }
 
-    // --- ActivityAware Implementation ---
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         val activity = binding.activity
+        val binaryMessenger = flutterPluginBinding.binaryMessenger
 
-        // 1. Instantiate the Stream Handler with the Activity
         streamHandler = ScreenRecordStreamHandler(activity)
-
-        // 2. Set up the Event Channel
         eventChannel = EventChannel(
-            binding.flutterEngine.dartExecutor.binaryMessenger,
-            "com.recording.detection/screen_recording_state" // Must match Dart side
+            binaryMessenger,
+            "com.recording.detection/screen_recording_state"
         )
         eventChannel?.setStreamHandler(streamHandler)
+
+        secureFlagManager = SecureFlagManager(activity)
+        methodChannel = MethodChannel(
+            binaryMessenger,
+            "com.recording.detection/make_secured"
+        )
+        methodChannel?.setMethodCallHandler(secureFlagManager)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        onDetachedFromActivity() // Same cleanup logic
+        onDetachedFromActivity()
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        onAttachedToActivity(binding) // Re-attach listeners
+        onAttachedToActivity(binding)
     }
 
     override fun onDetachedFromActivity() {
-        // 3. Clean up the Channel and Handler
         eventChannel?.setStreamHandler(null)
         eventChannel = null
         streamHandler = null
+
+        methodChannel?.setMethodCallHandler(null)
+        methodChannel = null
+        secureFlagManager = null
     }
 }
