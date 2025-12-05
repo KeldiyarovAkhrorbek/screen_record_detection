@@ -56,22 +56,6 @@ class _MyAppState extends State<MyApp> {
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 30),
-
-                  ElevatedButton(
-                    onPressed: () async {
-                      await ScreenRecordDetector().enableScreenSecurity();
-                    },
-                    child: Text("Enable screen security"),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  ElevatedButton(
-                    onPressed: () async {
-                      await ScreenRecordDetector().disableScreenSecurity();
-                    },
-                    child: Text("Disable screen security"),
-                  ),
                 ],
               ),
             );

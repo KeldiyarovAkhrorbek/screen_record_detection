@@ -5,14 +5,11 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.MethodChannel
 
 class ScreenRecordDetectionPlugin : FlutterPlugin, ActivityAware {
 
     private var eventChannel: EventChannel? = null
     private var streamHandler: ScreenRecordStreamHandler? = null
-    private var methodChannel: MethodChannel? = null
-    private var secureFlagManager: SecureFlagManager? = null
     private lateinit var flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -32,13 +29,6 @@ class ScreenRecordDetectionPlugin : FlutterPlugin, ActivityAware {
             "com.recording.detection/screen_recording_state"
         )
         eventChannel?.setStreamHandler(streamHandler)
-
-        secureFlagManager = SecureFlagManager(activity)
-        methodChannel = MethodChannel(
-            binaryMessenger,
-            "com.recording.detection/make_secured"
-        )
-        methodChannel?.setMethodCallHandler(secureFlagManager)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -54,8 +44,6 @@ class ScreenRecordDetectionPlugin : FlutterPlugin, ActivityAware {
         eventChannel = null
         streamHandler = null
 
-        methodChannel?.setMethodCallHandler(null)
-        methodChannel = null
         secureFlagManager = null
     }
 }

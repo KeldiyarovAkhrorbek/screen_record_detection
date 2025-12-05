@@ -7,12 +7,4 @@ class ScreenRecordDetector {
   Stream<bool> get onRecordingStateChanged {
     return ScreenRecordDetectionPlatform.instance.onRecordingStateChanged;
   }
-
-  Future<void> enableScreenSecurity() async {
-    await ScreenRecordDetectionPlatform.instance.enableScreenSecurity();
-  }
-
-  Future<void> disableScreenSecurity() async {
-    await ScreenRecordDetectionPlatform.instance.disableScreenSecurity();
-  }
 }

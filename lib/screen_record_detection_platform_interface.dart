@@ -21,16 +21,4 @@ abstract class ScreenRecordDetectionPlatform extends PlatformInterface {
       'onRecordingStateChanged has not been implemented.',
     );
   }
-
-  Future<void> enableScreenSecurity() {
-    throw UnimplementedError(
-      'enableScreenSecurity() has not been implemented.',
-    );
-  }
-
-  Future<void> disableScreenSecurity() {
-    throw UnimplementedError(
-      'disableScreenSecurity() has not been implemented.',
-    );
-  }
 }
