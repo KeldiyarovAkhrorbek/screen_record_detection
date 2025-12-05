@@ -25,7 +25,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 android {
-    namespace = "com.recording.detection.screen_record_detection"
+    namespace = "com.recording.detection"
 
     compileSdk = 36
 
